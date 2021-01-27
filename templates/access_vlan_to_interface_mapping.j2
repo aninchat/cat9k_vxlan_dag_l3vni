@@ -1,0 +1,9 @@
+{% for vlan in vlans -%}
+ {% if vlans[vlan].l3vni == 'no' -%}
+ {% for interface in vlans[vlan].interfaces -%}
+ interface {{ interface }}
+ switchport mode access
+ switchport access vlan {{ vlan }}
+ {% endfor -%}
+ {% endif %}
+{% endfor %}

@@ -1,0 +1,21 @@
+---
+
+all:
+  children:
+    access:
+      hosts:
+        Access01:
+          ansible_host: 10.104.233.92 
+        Access02:
+          ansible_host: 10.104.233.93
+        Access03:
+          ansible_host: 10.104.233.96
+        Access04:
+          ansible_host: 10.104.233.97
+    core:
+      hosts:
+        Core01:
+          ansible_host: 10.104.233.94
+        Core02:
+          ansible_host: 10.104.233.95
+               

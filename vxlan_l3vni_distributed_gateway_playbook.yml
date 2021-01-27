@@ -1,0 +1,64 @@
+---
+
+- name: Automated VXLAN deployment with BGP EPVN and HER
+  hosts: all
+  connection: network_cli
+  tasks:
+          - name: Configuring route-map on cores to preserve next-hop
+            when: inventory_hostname in groups['core']
+            cli_config:
+              config: "{{ lookup('template', 'templates/core_bgp_route_map_next_hop.j2') }}"
+            register: result
+          
+          - name: Configuring neighbors globally for BGP
+            cli_config:
+              config: "{{ lookup('template', 'templates/bgp_global.j2') }}"
+            register: result
+
+          - name: Activating neighbors for L2VPN EVPN AFI/SAFI
+            cli_config:
+              config: "{{ lookup('template', 'templates/bgp_evpn_activate.j2') }}"
+            register: result
+
+          - name: VLAN creation on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_vlan_configure.j2') }}"
+            register: result
+
+          - name: Mapping VLAN to host ports on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_vlan_to_interface_mapping.j2') }}"
+            register: result
+
+          - name: Configuring VRFs on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_vrf_creation.j2') }}"
+            register: result
+
+          - name: Configuring SVIs and mapping to respective VRFs on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_svi_creation.j2') }}"
+            register: result
+
+          - name: Configuring EVPN instances on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+              config: "{{ lookup('template', 'templates/access_config_evpn_inst.j2') }}"
+            register: result
+
+          - name: Mapping VLANs to their respective VNIs on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_vlan_evpn_mapping.j2') }}"
+            register: result
+
+          - name: Configuring NVE interface(s) on access switches
+            when: inventory_hostname in groups['access']
+            cli_config:
+                    config: "{{ lookup('template', 'templates/access_nve_interfaces.j2') }}"
+            register: result
+

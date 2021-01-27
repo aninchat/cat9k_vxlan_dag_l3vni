@@ -1,0 +1,10 @@
+router bgp {{ bgp.as_number }}
+ address-family l2vpn evpn
+  rewrite-evpn-rt-asn
+  {% for neighbor in bgp.neighbors -%}
+  neighbor {{ neighbor }} activate
+  neighbor {{ neighbor }} send-community both
+  {% if role == 'core' -%}
+  neighbor {{ neighbor }} route-map bgp_nexthop_unchanged out
+  {% endif -%}
+  {% endfor %}

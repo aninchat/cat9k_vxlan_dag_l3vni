@@ -1,0 +1,12 @@
+router bgp {{ bgp.as_number }}
+ bgp log-neighbor-changes
+ bgp router-id interface lo0
+ no bgp default ipv4-unicast
+ {% if role == 'core' -%}
+ no bgp default route-target filter
+ {% endif -%}
+ {% for neighbor in bgp.neighbors -%}
+ neighbor {{ neighbor }} remote-as {{ bgp.neighbors[neighbor].as_number }}
+ neighbor {{ neighbor }} ebgp-multihop 10
+ neighbor {{ neighbor }} update-source Loopback0
+ {% endfor %}

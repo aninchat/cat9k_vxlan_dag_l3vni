@@ -1,0 +1,9 @@
+l2vpn evpn
+ replication-type ingress
+ router-id Loopback1
+ exit
+{% for instance in evpn_instances -%}
+l2vpn evpn instance {{ instance }} vlan-based
+ encapsulation vxlan
+{% endfor %}
+ 

@@ -1,0 +1,11 @@
+{% for vrf in vrfs -%}
+vrf definition {{ vrf }}
+ rd {{ vrfs[vrf].rd }} 
+ address-family ipv4  
+  {% for import_rt in vrfs[vrf].rt.import -%}
+  route-target import {{ import_rt }} stitching
+  {% endfor -%}
+  {% for export_rt in vrfs[vrf].rt.export -%}
+  route-target export {{ export_rt }} stitching
+  {% endfor -%}
+{% endfor %}

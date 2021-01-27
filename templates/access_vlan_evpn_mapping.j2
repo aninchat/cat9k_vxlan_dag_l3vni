@@ -1,0 +1,9 @@
+{% for vlan in vlans -%}
+{% if vlans[vlan].l3vni == 'no' -%}
+vlan configuration {{ vlan }}
+ member evpn-instance {{ vlans[vlan].evpn_instance }} vni {{ vlans[vlan].vni }}
+{% else -%}
+vlan configuration {{ vlan }}
+ member vni {{ vlans[vlan].vni }}
+{% endif %}
+{% endfor %}

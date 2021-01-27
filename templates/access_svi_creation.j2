@@ -1,0 +1,12 @@
+{% for vlan in vlans -%}
+interface vlan {{ vlan }}
+ vrf forwarding {{ vlans[vlan].vrf }}
+ {% if vlans[vlan].l3vni == 'no' -%}
+ ip address {{ vlans[vlan].ip_address }} {{ vlans[vlan].subnet_mask }}
+ mac-address {{ vlans[vlan].mac_address }}
+ {% else -%}
+ ip unnumbered Loopback1
+ no autostate
+ {% endif %}
+ no shut
+{% endfor %}

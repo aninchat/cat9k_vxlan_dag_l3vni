@@ -1,0 +1,12 @@
+{% for interface in nve_interfaces -%}
+interface nve{{ interface }}
+ no ip address
+ source-interface {{ nve_interfaces[interface].source_interface }}
+ host-reachability protocol bgp
+ {% for l2vni in nve_interfaces[interface].vnis.l2vnis -%}
+ member vni {{ l2vni }} {{ nve_interfaces[interface].vnis.l2vnis[l2vni].replication_type }} 
+ {% endfor -%}
+ {% for l3vni in nve_interfaces[interface].vnis.l3vnis -%}
+ member vni {{ l3vni }} vrf {{ nve_interfaces[interface].vnis.l3vnis[l3vni].vrf }}
+ {% endfor %}
+{% endfor %}
