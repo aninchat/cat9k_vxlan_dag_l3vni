@@ -1,0 +1,13 @@
+---
+
+bgp:
+  as_number: 12
+  neighbors:
+    1.1.1.1:
+      as_number: 1
+    2.2.2.2:
+      as_number: 2
+    3.3.3.3:
+      as_number: 3
+    4.4.4.4:
+      as_number: 4

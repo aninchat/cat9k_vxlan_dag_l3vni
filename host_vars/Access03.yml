@@ -1,0 +1,68 @@
+---
+
+bgp:
+  as_number: 3
+  neighbors:
+    11.11.11.11:
+      as_number: 12
+    22.22.22.22:
+      as_number: 12
+vlans:
+  10:
+    name: 'Test_VLAN_10_for_VXLAN_automation'
+    ip_address: '100.100.100.254'
+    subnet_mask: '255.255.255.0'
+    mac_address: '0010.0010.0010'
+    vni: 10000
+    l3vni: 'no'
+    vrf: 'Test_VRF'
+    evpn_instance: 2
+    interfaces:
+            - 'Ethernet1/1'
+  30:
+    name: 'Test_VLAN_30_for_VXLAN_automation'
+    ip_address: '30.30.30.254'
+    subnet_mask: '255.255.255.0'
+    mac_address: '0030.0030.0030'
+    vni: 10030
+    l3vni: 'no'
+    vrf: 'Test_VRF'
+    evpn_instance: 1
+    interfaces:
+            - 'Ethernet0/3'
+  50:
+    name: 'VLAN_for_L3VNI'
+    vni: 10050
+    vrf: 'Test_VRF'
+    l3vni: yes
+
+vrfs:
+  Test_VRF:
+          rd: '192.168.100.3:1'
+          rt:
+                  import:
+                          - '1000:1'
+                          - '1000:2'
+                          - '1000:4'
+                  export:
+                          - '1000:3'
+
+evpn_instances:
+  1:
+    replication_type: 'ingress'
+  2:
+   replication_type: 'ingress'
+
+nve_interfaces:
+  1:
+    source_interface: Loopback1
+    vnis:
+            l2vnis:
+                    10000:
+                            replication_type: 'ingress-replication'
+                    10030:
+                            replication_type: 'ingress-replication'
+            l3vnis:
+                    10050:
+                            vrf: 'Test_VRF'
+
